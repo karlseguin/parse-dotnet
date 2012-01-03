@@ -22,6 +22,7 @@ namespace Parse
 
    public class Objects : IObjects
    {
+      private static readonly JsonConverter[] _serializationConverters = new[] {new DateConverter()};
       public void Save(object o)
       {
          Save(o, null);
@@ -29,7 +30,7 @@ namespace Parse
 
       public void Save(object o, Action<Response<ParseObject>> callback)
       {
-         var payload = JsonConvert.SerializeObject(o);
+         var payload = JsonConvert.SerializeObject(o, _serializationConverters);
          Communicator.SendDataPayload<ParseObject>(Communicator.Post, UrlFor(o), payload, r =>
          {
             if (callback == null) return;
@@ -56,7 +57,7 @@ namespace Parse
       public void Update(string id, object o, Action<Response<DateTime>> callback)
       {
          var url = string.Concat(UrlFor(o), "/", id);
-         var payload = JsonConvert.SerializeObject(o);
+         var payload = JsonConvert.SerializeObject(o, _serializationConverters);
          Communicator.SendDataPayload<DateTime>(Communicator.Put, url, payload, r =>
          {
             if (callback == null) return;

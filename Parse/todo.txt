@@ -3,9 +3,6 @@ Support Id in queries
   need to map this to objectId
 
 Support $in in queries
-Paging
-Count
 Cache
 regex
 dates
-sorting
