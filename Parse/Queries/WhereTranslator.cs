@@ -8,11 +8,11 @@ namespace Parse.Queries
 {
    internal class WhereTranslator : ExpressionVisitor
    {
+      private const string _regexOperation = "$regex";
       private IDictionary<string, object> _where;
       private string _currentKey;
       private string _currentOperation;
       private bool _inversed;
-      
 
       internal IDictionary<string, object> Translate(Expression expression)
       {
@@ -118,9 +118,26 @@ namespace Parse.Queries
             HandleRegexIsMatch(m);
             return m;
          }
-        throw new NotSupportedException(string.Format("The method '{0}' is not supported", m.Method.Name));
+         if (m.Method.DeclaringType == typeof(string))
+         {
+            switch (m.Method.Name)
+            {
+               case "StartsWith":
+               {
+                  return HandleRegexIsMatch(m, "^{0}");
+               }
+               case "EndsWith":
+               {
+                  return HandleRegexIsMatch(m, "{0}$");
+               }
+               case "Contains":
+               {
+                  return HandleRegexIsMatch(m, "{0}");
+               }
+            }
+         }
+         throw new NotSupportedException(string.Format("The method '{0}' is not supported", m.Method.Name));
       }
-
 
       private void SetNestedDictionary(string operation)
       {
@@ -154,8 +171,19 @@ namespace Parse.Queries
       {
          ResetContext();
          Visit(m.Arguments[0]);
-         SetNestedDictionary("$regex");
+         SetNestedDictionary(_regexOperation);
          Visit(m.Arguments[1]);
+      }
+
+      private Expression HandleRegexIsMatch(MethodCallExpression expression, string pattern)
+      {
+         ResetContext();
+         Visit(expression.Object);
+         SetNestedDictionary(_regexOperation);
+         Visit(expression.Arguments[0]);
+         var value = (IDictionary<string, object>) _where[_currentKey];
+         value[_regexOperation] = string.Format(pattern, value[_regexOperation]);
+         return expression;
       }
    }
 }

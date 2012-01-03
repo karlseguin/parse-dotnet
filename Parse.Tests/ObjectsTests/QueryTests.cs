@@ -138,13 +138,35 @@ namespace Parse.Tests.ObjectsTests
       }
 
       [Test]
+      public void SupportsStartsWithQuery()
+      {
+         Server.Stub(new ApiExpectation { Method = "GET", Url = "/1/classes/ComplexParseObjectClass", Request = string.Concat("where=", Uri.EscapeDataString(@"{""Name"":{""$regex"":""^nice""}}")), Response = _blankResponse });
+         new Driver().Objects.Query<ComplexParseObjectClass>().Where(c => c.Name.StartsWith("nice")).Execute(SetIfSuccess);
+         WaitOne();
+      }
+
+      [Test]
+      public void SupportsEndsWithQuery()
+      {
+         Server.Stub(new ApiExpectation { Method = "GET", Url = "/1/classes/ComplexParseObjectClass", Request = string.Concat("where=", Uri.EscapeDataString(@"{""Name"":{""$regex"":""\\d$""}}")), Response = _blankResponse });
+         new Driver().Objects.Query<ComplexParseObjectClass>().Where(c => c.Name.EndsWith("\\d")).Execute(SetIfSuccess);
+         WaitOne();
+      }
+
+      [Test]
+      public void SupportsContainsQuery()
+      {
+         Server.Stub(new ApiExpectation { Method = "GET", Url = "/1/classes/ComplexParseObjectClass", Request = string.Concat("where=", Uri.EscapeDataString(@"{""Name"":{""$regex"":""[a,e,i,o,u]""}}")), Response = _blankResponse });
+         new Driver().Objects.Query<ComplexParseObjectClass>().Where(c => c.Name.Contains("[a,e,i,o,u]")).Execute(SetIfSuccess);
+         WaitOne();
+      }
+
+      [Test]
       public void SendsAlot()
       {
          Server.Stub(new ApiExpectation { Method = "GET", Url = "/1/classes/ComplexParseObjectClass", Request = string.Concat("where=", Uri.EscapeDataString(@"{""PowerLevel"":{""$gt"":9000,""$lt"":10000},""Sayan"":false}"), "&count=1&skip=10&limit=20&order=-Id"), Response = _blankResponse });
          new Driver().Objects.Query<ComplexParseObjectClass>().Where(c => c.PowerLevel > 9000 && c.PowerLevel < 10000 && !c.Sayan).Count().Limit(20).Skip(10).Sort(c => c.Id, false).Execute(SetIfSuccess);
          WaitOne();
       }
-
-
    }
 }

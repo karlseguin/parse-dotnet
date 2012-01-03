@@ -120,3 +120,10 @@ Regular expressions can be used used via the Regex.IsMatch method:
 	{
 		...
 	});
+
+Along with regular expressions, `StartsWith`, `EndsWith` and `Contains` are also supported on `string` members:
+
+	parse.Objects.Query<User>().Where(c => c.Name.EndsWith("ly")).Execute(r => 
+	{
+		...
+	});
