@@ -113,3 +113,10 @@ When `Count` is called, a count of records is also returned. This can be combine
 			var count = r.Data.Count;
 		}
 	});
+
+Regular expressions can be used used via the Regex.IsMatch method:
+
+	parse.Objects.Query<User>().Where(c => Regex.IsMatch(c.Name, "[a-e]").Execute(r => 
+	{
+		...
+	});

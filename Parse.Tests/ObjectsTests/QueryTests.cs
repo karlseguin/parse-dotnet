@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using NUnit.Framework;
 
 namespace Parse.Tests.ObjectsTests
@@ -129,11 +130,21 @@ namespace Parse.Tests.ObjectsTests
       }
 
       [Test]
+      public void SuportsRegularExpressionQuery()
+      {
+         Server.Stub(new ApiExpectation { Method = "GET", Url = "/1/classes/ComplexParseObjectClass", Request = string.Concat("where=", Uri.EscapeDataString(@"{""Name"":{""$regex"":""[a-e\\d]{1,2}""}}")), Response = _blankResponse });
+         new Driver().Objects.Query<ComplexParseObjectClass>().Where(c => Regex.IsMatch(c.Name, "[a-e\\d]{1,2}")).Execute(SetIfSuccess);
+         WaitOne();
+      }
+
+      [Test]
       public void SendsAlot()
       {
          Server.Stub(new ApiExpectation { Method = "GET", Url = "/1/classes/ComplexParseObjectClass", Request = string.Concat("where=", Uri.EscapeDataString(@"{""PowerLevel"":{""$gt"":9000,""$lt"":10000},""Sayan"":false}"), "&count=1&skip=10&limit=20&order=-Id"), Response = _blankResponse });
          new Driver().Objects.Query<ComplexParseObjectClass>().Where(c => c.PowerLevel > 9000 && c.PowerLevel < 10000 && !c.Sayan).Count().Limit(20).Skip(10).Sort(c => c.Id, false).Execute(SetIfSuccess);
          WaitOne();
       }
+
+
    }
 }

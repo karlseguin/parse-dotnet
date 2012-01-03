@@ -4,5 +4,3 @@ Support Id in queries
 
 Support $in in queries
 Cache
-regex
-dates

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Parse.Queries
 {
@@ -35,8 +36,7 @@ namespace Parse.Queries
 
       protected override Expression VisitBinary(BinaryExpression b)
       {
-         _currentKey = _currentOperation = null;
-         _inversed = false;
+         ResetContext();
          Visit(b.Left);
          switch (b.NodeType)
          {
@@ -64,6 +64,12 @@ namespace Parse.Queries
          }
          Visit(b.Right);
          return b;
+      }
+
+      private void ResetContext()
+      {
+         _currentKey = _currentOperation = null;
+         _inversed = false;
       }
 
       protected override Expression VisitConstant(ConstantExpression c)
@@ -105,6 +111,17 @@ namespace Parse.Queries
          throw new NotSupportedException(string.Format("The member '{0}' is not supported", m.Member.Name));
       }
 
+      protected override Expression VisitMethodCall(MethodCallExpression m)
+      {
+         if (m.Method.DeclaringType == typeof(Regex) && m.Method.Name == "IsMatch")
+         {
+            HandleRegexIsMatch(m);
+            return m;
+         }
+        throw new NotSupportedException(string.Format("The method '{0}' is not supported", m.Method.Name));
+      }
+
+
       private void SetNestedDictionary(string operation)
       {
          var nested = _where[_currentKey] as Dictionary<string, object>;
@@ -131,6 +148,14 @@ namespace Parse.Queries
          {
             ((IDictionary<string, object>)_where[_currentKey])[_currentOperation] = o;
          }
+      }
+
+      private void HandleRegexIsMatch(MethodCallExpression m)
+      {
+         ResetContext();
+         Visit(m.Arguments[0]);
+         SetNestedDictionary("$regex");
+         Visit(m.Arguments[1]);
       }
    }
 }
