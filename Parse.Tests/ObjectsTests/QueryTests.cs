@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 
@@ -158,6 +159,15 @@ namespace Parse.Tests.ObjectsTests
       {
          Server.Stub(new ApiExpectation { Method = "GET", Url = "/1/classes/ComplexParseObjectClass", Request = string.Concat("where=", Uri.EscapeDataString(@"{""Name"":{""$regex"":""[a,e,i,o,u]""}}")), Response = _blankResponse });
          new Driver().Objects.Query<ComplexParseObjectClass>().Where(c => c.Name.Contains("[a,e,i,o,u]")).Execute(SetIfSuccess);
+         WaitOne();
+      }
+
+      [Test]
+      public void SupportInQueries()
+      {
+         Server.Stub(new ApiExpectation { Method = "GET", Url = "/1/classes/ComplexParseObjectClass", Request = string.Concat("where=", Uri.EscapeDataString(@"{""Name"":{""$in"":[""jessica"",""paul""]}}")), Response = _blankResponse });
+         var options = new[] {"jessica", "paul"};
+         new Driver().Objects.Query<ComplexParseObjectClass>().Where(c => options.Contains(c.Name)).Execute(SetIfSuccess);
          WaitOne();
       }
 

@@ -85,7 +85,7 @@ namespace Parse.Queries
             if (m.Expression.NodeType == ExpressionType.Constant)
             {
                var objectMember = Expression.Convert(m, typeof(object));
-               var getterLambda = Expression.Lambda<Func<object>>(objectMember, (ParameterExpression) m.Expression);
+               var getterLambda = Expression.Lambda<Func<object>>(objectMember);
                var getter = getterLambda.Compile();
                SetValue(getter());
                return m;
@@ -116,6 +116,11 @@ namespace Parse.Queries
          if (m.Method.DeclaringType == typeof(Regex) && m.Method.Name == "IsMatch")
          {
             HandleRegexIsMatch(m);
+            return m;
+         }
+         if (m.Method.DeclaringType == typeof(System.Linq.Enumerable) && m.Method.Name == "Contains")
+         {
+            HandleContains(m);
             return m;
          }
          if (m.Method.DeclaringType == typeof(string))
@@ -165,6 +170,14 @@ namespace Parse.Queries
          {
             ((IDictionary<string, object>)_where[_currentKey])[_currentOperation] = o;
          }
+      }
+
+      private void HandleContains(MethodCallExpression m)
+      {
+         ResetContext();
+         Visit(m.Arguments[1]);
+         SetNestedDictionary("$in");
+         Visit(m.Arguments[0]);
       }
 
       private void HandleRegexIsMatch(MethodCallExpression m)

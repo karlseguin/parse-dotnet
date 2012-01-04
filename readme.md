@@ -127,3 +127,13 @@ Along with regular expressions, `StartsWith`, `EndsWith` and `Contains` are also
 	{
 		...
 	});
+
+By importing `System.Linq` you can provide a list of values for an IN operation:
+
+	using System.Linq;
+	....
+	var names = new[]{"Jessica", "Paul", "Leto"};
+	parse.Objects.Query<User>().Where(c => names.Contains(c.Name)).Execute(r => 
+	{
+		...
+	});
