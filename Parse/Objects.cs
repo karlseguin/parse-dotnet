@@ -22,7 +22,7 @@ namespace Parse
 
    public class Objects : IObjects
    {
-      private static readonly JsonConverter[] _serializationConverters = new[] {new DateConverter()};
+      private static readonly JsonConverter[] _serializationConverters = new[] {(JsonConverter)new DateConverter(), new ByteConverterr()};
       public void Save(object o)
       {
          Save(o, null);

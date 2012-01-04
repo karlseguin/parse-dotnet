@@ -49,6 +49,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\ByteConverter.cs" />
     <Compile Include="Components\Communicator.cs" />
     <Compile Include="Components\DateConverter.cs" />
     <Compile Include="Components\ParseConfiguration.cs" />
