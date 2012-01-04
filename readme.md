@@ -77,6 +77,25 @@ Alternatively you can update only specific fields:
 		if (r.Success) { .... }
 	});
 
+Like saving, updating a ParseObject won't update the local instance.
+
+### Incrementing Values
+Counter can be incremented via the `Increment` method:
+
+	parse.Objects.Increment<Hits>("AJ7Yl6OHB4", c => c.Count, 1, r =>
+	{
+		if (r.Success) { var currentCount = r.Data; }
+	});
+	
+	//or
+	parse.Objects.Increment<Hits>("AJ7Yl6OHB4", "visits", -1)
+	
+	//or
+	var blah = new ParseObjectChild{Id = "123"};
+	parse.Objects.Increment(blah, c => c.Visits, 10);
+
+Like saving and updating, the last example won't update the actual `blah` instance.
+
 ### Deleting Objects
 This should be obvious by now.
 

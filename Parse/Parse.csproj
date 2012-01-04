@@ -47,6 +47,7 @@
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Windows" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\ByteConverter.cs" />
