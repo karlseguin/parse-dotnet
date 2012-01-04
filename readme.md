@@ -4,6 +4,9 @@ This is a Windows Phone library for accessing the <http://parse.com> web service
 
 This library is in very early development.
 
+## Installation
+The library is availble on nuget, at <http://nuget.org/packages/parse>
+
 ## Configuration
 On application start you should configure the driver by supplying your application id and master key (authorization with the REST API is done via the master key and not the client key):
 

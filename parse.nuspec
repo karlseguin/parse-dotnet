@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>parse</id>
+    <version>0.1</version>
+    <authors>Karl Seguin</authors>
+    <owners>Karl Seguin</owners>
+    <projectUrl>https://github.com/karlseguin/parse-dotnet</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>windows phone library for parse.com</description>
+    <tags>parse library windows phone WP7 sdk cloud api</tags>
+	  <dependencies>
+		<dependency id="Newtonsoft.Json" version="4.0.2" />
+	  </dependencies>
+  </metadata>
+  <files>
+	<file src="Parse\bin\Release\Parse.dll" target="lib"/>
+  </files>
+</package>
