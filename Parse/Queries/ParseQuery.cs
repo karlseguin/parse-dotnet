@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
 using Newtonsoft.Json;
 
 namespace Parse.Queries
@@ -16,7 +15,7 @@ namespace Parse.Queries
       IParseQuery<T> SortAscending(Expression<Func<T, object>> expression);
       IParseQuery<T> SortDescending(Expression<Func<T, object>> expression);
 
-      void Execute(Action<Response<ResultsContainer<T>>> callback);
+      void Execute(Action<Response<ResultsResponse<T>>> callback);
    }
 
    public class ParseQuery<T> : ExpressionVisitor, IParseQuery<T>
@@ -70,30 +69,17 @@ namespace Parse.Queries
 
       public IParseQuery<T> Sort(Expression<Func<T, object>> expression, bool ascending)
       {
-         var e = GetMemberExpression(expression);
-         if (e == null || e.Expression.NodeType != ExpressionType.Parameter)
+         var name = expression.Body.GetMemberName();
+         if (name == null)
          {
             throw new NotSupportedException(string.Format("The member '{0}' is not supported for sorting", expression.Body.NodeType));
          }
-         _sort = e.Member.Name;
+         _sort = name;
          _sortDirection = ascending;
          return this;
       }
 
-      private static MemberExpression GetMemberExpression(Expression<Func<T, object>> expression)
-      {
-         if (expression.Body is MemberExpression)
-         {
-            return (MemberExpression) expression.Body;
-         }
-         if (expression.Body is UnaryExpression)
-         {
-            return ((UnaryExpression)expression.Body).Operand as MemberExpression;
-         }
-         return null;
-      }
-
-      public void Execute(Action<Response<ResultsContainer<T>>> callback)
+      public void Execute(Action<Response<ResultsResponse<T>>> callback)
       {
          var dictionary = new Dictionary<string, object>();
          if (_where != null) { dictionary["where"] = JsonConvert.SerializeObject(_where); }

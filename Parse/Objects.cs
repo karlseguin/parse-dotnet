@@ -9,10 +9,12 @@ namespace Parse
    {
       void Save(object o);
       void Save(object o, Action<Response<ParseObject>> callback);
-      void Update(string id, object ok);
+      void Update(string id, object o);
       void Update(IParseObject o);
       void Update(string id, object o, Action<Response<DateTime>> callback);
       void Update(IParseObject o, Action<Response<DateTime>> callback);
+      IUpdateQuery<T> Update<T>(string id);
+      IUpdateQuery<T> Update<T>(T o) where T : IParseObject;
       void Get<T>(string id, Action<Response<T>> callback);
       void Delete<T>(T o) where T : IParseObject;
       void Delete<T>(string id, Action<Response<T>> callback);
@@ -39,9 +41,9 @@ namespace Parse
          });
       }
 
-      public void Update(string id, object ok)
+      public void Update(string id, object o)
       {
-         Update(id, ok, null);
+         Update(id, o, null);
       }
 
       public void Update(IParseObject o)
@@ -54,16 +56,28 @@ namespace Parse
          Update(o.Id, o, callback);
       }
 
+      public IUpdateQuery<T> Update<T>(string id)
+      {
+         return new UpdateQuery<T>(this, id);
+      }
+
+      public IUpdateQuery<T> Update<T>(T o) where T : IParseObject
+      {
+         return Update<T>(o.Id);
+      }
+
       public void Update(string id, object o, Action<Response<DateTime>> callback)
       {
          var url = string.Concat(UrlFor(o), "/", id);
          var payload = JsonConvert.SerializeObject(o, _serializationConverters);
-         Communicator.SendDataPayload<DateTime>(Communicator.Put, url, payload, r =>
-         {
-            if (callback == null) return;
-            if (r.Success) { r.Data = JsonConvert.DeserializeObject<UpdatedAtContainer>(r.Raw).UpdatedAt; }
-            callback(r);
-         });
+         DoUpdate(url, payload, callback);
+      }
+
+      public void Update<T>(string id, IDictionary<string, object> document, Action<Response<DateTime>> callback)
+      {
+         var url = string.Concat(UrlFor<T>(), "/", id);
+         var payload = JsonConvert.SerializeObject(document, _serializationConverters);
+         DoUpdate(url, payload, callback);
       }
 
       public void Get<T>(string id, Action<Response<T>> callback)
@@ -93,11 +107,21 @@ namespace Parse
          return new ParseQuery<T>(this);
       }
 
-      public void Query<T>(IDictionary<string, object> selector, Action<Response<ResultsContainer<T>>> callback)
+      public void Query<T>(IDictionary<string, object> selector, Action<Response<ResultsResponse<T>>> callback)
       {
-         Communicator.SendQueryPayload<ResultsContainer<T>>(Communicator.Get, UrlFor<T>(), selector, r =>
+         Communicator.SendQueryPayload<ResultsResponse<T>>(Communicator.Get, UrlFor<T>(), selector, r =>
          {
-            if (r.Success) { r.Data = JsonConvert.DeserializeObject<ResultsContainer<T>>(r.Raw); }
+            if (r.Success) { r.Data = JsonConvert.DeserializeObject<ResultsResponse<T>>(r.Raw); }
+            callback(r);
+         });
+      }
+
+      private static void DoUpdate(string url, string payload, Action<Response<DateTime>> callback)
+      {
+         Communicator.SendDataPayload<DateTime>(Communicator.Put, url, payload, r =>
+         {
+            if (callback == null) return;
+            if (r.Success) { r.Data = JsonConvert.DeserializeObject<UpdatedAtContainer>(r.Raw).UpdatedAt; }
             callback(r);
          });
       }

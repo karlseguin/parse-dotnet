@@ -46,12 +46,14 @@
     <Compile Include="Components\Response.cs" />
     <Compile Include="Driver.cs" />
     <Compile Include="Models\ParseObject.cs" />
-    <Compile Include="Models\ResultsContainer.cs" />
+    <Compile Include="Models\ResultsResponse.cs" />
     <Compile Include="Objects.cs" />
     <Compile Include="ParseException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\ExpressionExtensions.cs" />
     <Compile Include="Queries\ExpressionVisitor.cs" />
     <Compile Include="Queries\ParseQuery.cs" />
+    <Compile Include="Queries\UpdateQuery.cs" />
     <Compile Include="Queries\WhereTranslator.cs" />
   </ItemGroup>
   <ItemGroup>

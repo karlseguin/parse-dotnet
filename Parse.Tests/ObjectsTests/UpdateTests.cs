@@ -30,5 +30,22 @@ namespace Parse.Tests.ObjectsTests
          });
          WaitOne();
       }
+
+      [Test]
+      public void UpdateSpecificFieldsViaQuery()
+      {
+         Server.Stub(new ApiExpectation { Method = "PUT", Url = "/1/classes/ComplexParseObjectClass/abc", Request = "{\"Name\":\"new name\",\"PowerLevel\":499}", Response = "{}" });
+         new Driver().Objects.Update<ComplexParseObjectClass>("abc").Set(c => c.Name, "new name").Set(c => c.PowerLevel, 499).Execute(SetIfSuccess);
+         WaitOne();
+      }
+
+      [Test]
+      public void UpdateSpecificFieldsOfAParseObjectViaQuery()
+      {
+         var o = new ComplexParseObjectClass {Id = "heh"};
+         Server.Stub(new ApiExpectation { Method = "PUT", Url = "/1/classes/ComplexParseObjectClass/heh", Request = "{\"Name\":\"new name\",\"PowerLevel\":499}", Response = "{}" });
+         new Driver().Objects.Update(o).Set(c => c.Name, "new name").Set(c => c.PowerLevel, 499).Execute(SetIfSuccess);
+         WaitOne();
+      }
    }
 }

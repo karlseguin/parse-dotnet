@@ -65,6 +65,18 @@ Updating works similar to saving. Again, the callback is optional. You can eithe
 		}
 	});
 
+Alternatively you can update only specific fields:
+
+	//execute takes an optional callback
+	var blah = new ParseObjectChild{Id = "123", BadExample = true};
+	parse.Objects.Update(blah).Set(b => b.BadExample, false).Execute();
+	
+	//or
+	parse.Objects.Update<User>("1994").Set(u => u.Password, "password").Execute(r =>
+	{
+		if (r.Success) { .... }
+	});
+
 ### Deleting Objects
 This should be obvious by now.
 
