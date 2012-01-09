@@ -102,6 +102,7 @@ Like saving and updating, the last example won't update the actual `blah` instan
 ### Deleting Objects
 This should be obvious by now.
 
+	parse.Objects.Delete<User>(USERID, optionalCallback);
 
 ### Getting an Object By Id
 
@@ -171,3 +172,22 @@ By importing `System.Linq` you can provide a list of values for an IN operation:
 	{
 		...
 	});
+
+
+## Users
+Parse allows developers to register and authenticate users. In parse, all users must have a `username` and `password` field. Within this library this is enforced by the `IParseUser` interface. This means you'd likely have a `User` class which looks something like:
+
+	public class User : IParseUser
+	{
+		public string UserName{get;set;}
+		public string Password{get;set;}
+		//any other properties specific to your app here
+	});
+
+### Registration
+This method registers a user with parse. All communication with the parse api happens over SSL, and the parse backend only stores an encrypted version of the password (according to their documentation anyways!)
+
+	var user = new User{Name = "Leto", Password = "Ghanima", DuncansKilled = 58};
+	parse.Users.Register(user)
+
+Registration takes an optional callback, which exposes a `ParseObject`, just like the `Objects.Save` method

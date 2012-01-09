@@ -50,11 +50,13 @@
     <Reference Include="System.Windows" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\ByteConverter.cs" />
+    <Compile Include="Components\Json\ByteConverter.cs" />
     <Compile Include="Components\Communicator.cs" />
-    <Compile Include="Components\DateConverter.cs" />
+    <Compile Include="Components\Json\DateConverter.cs" />
+    <Compile Include="Components\Json\ParseUserConverter.cs" />
     <Compile Include="Components\ParseConfiguration.cs" />
     <Compile Include="Components\Response.cs" />
+    <Compile Include="Models\IParseUser.cs" />
     <Compile Include="Models\ResultsResponse.cs" />
     <Compile Include="Objects.cs" />
     <Compile Include="Driver.cs" />
@@ -66,6 +68,7 @@
     <Compile Include="Queries\ParseQuery.cs" />
     <Compile Include="Queries\UpdateQuery.cs" />
     <Compile Include="Queries\WhereTranslator.cs" />
+    <Compile Include="Users.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="todo.txt" />

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>parse</id>
-    <version>0.1</version>
+    <version>0.2</version>
     <authors>Karl Seguin</authors>
     <owners>Karl Seguin</owners>
     <projectUrl>https://github.com/karlseguin/parse-dotnet</projectUrl>

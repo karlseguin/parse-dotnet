@@ -2,5 +2,4 @@ Support Id in queries
   .Where(c => c.Name == "Jessica" && c.Id == "abc");
   need to map this to objectId
 
-Support $in in queries
 Cache

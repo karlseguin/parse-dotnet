@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 using Parse.Queries;
 
 namespace Parse
@@ -36,7 +35,6 @@ namespace Parse
 
    public class Objects : IObjects
    {
-      private static readonly JsonConverter[] _serializationConverters = new[] {(JsonConverter)new DateConverter(), new ByteConverterr()};
       public void Save(object o)
       {
          Save(o, null);
@@ -44,7 +42,7 @@ namespace Parse
 
       public void Save(object o, Action<Response<ParseObject>> callback)
       {
-         var payload = JsonConvert.SerializeObject(o, _serializationConverters);
+         var payload = JsonConvert.SerializeObject(o, Driver.SerializationConverters);
          Communicator.SendDataPayload<ParseObject>(Communicator.Post, UrlFor(o), payload, r =>
          {
             if (callback == null) return;
@@ -81,14 +79,14 @@ namespace Parse
       public void Update(string id, object o, Action<Response<DateTime>> callback)
       {
          var url = string.Concat(UrlFor(o), "/", id);
-         var payload = JsonConvert.SerializeObject(o, _serializationConverters);
+         var payload = JsonConvert.SerializeObject(o, Driver.SerializationConverters);
          DoUpdate(url, payload, callback);
       }
 
       public void Update<T>(string id, IDictionary<string, object> document, Action<Response<DateTime>> callback)
       {
          var url = string.Concat(UrlFor<T>(), "/", id);
-         var payload = JsonConvert.SerializeObject(document, _serializationConverters);
+         var payload = JsonConvert.SerializeObject(document, Driver.SerializationConverters);
          DoUpdate(url, payload, callback);
       }
 
