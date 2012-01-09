@@ -172,6 +172,22 @@ namespace Parse.Tests.ObjectsTests
       }
 
       [Test]
+      public void SupportsNearSphereWithDistance()
+      {
+         Server.Stub(new ApiExpectation { Method = "GET", Url = "/1/classes/GeoPointClass", Request = string.Concat("where=", Uri.EscapeDataString(@"{""Location"":{""$nearSphere"":{""__type"":""GeoPoint"",""latitude"":23.2,""longitude"":-39.4},""$maxDistanceInMiles"":2.0}}")), Response = _blankResponse });
+         new Driver().Objects.Query<GeoPointClass>().Where(c => c.Location.NearSphere(23.2, -39.4, 2)).Execute(SetIfSuccess);
+         WaitOne();
+      }
+
+      [Test]
+      public void SupportsNearSphereWithoutDistance()
+      {
+         Server.Stub(new ApiExpectation { Method = "GET", Url = "/1/classes/GeoPointClass", Request = string.Concat("where=", Uri.EscapeDataString(@"{""Location"":{""$nearSphere"":{""__type"":""GeoPoint"",""latitude"":1.1,""longitude"":-2.3}}}")), Response = _blankResponse });
+         new Driver().Objects.Query<GeoPointClass>().Where(c => c.Location.NearSphere(1.1,-2.3)).Execute(SetIfSuccess);
+         WaitOne();
+      }
+
+      [Test]
       public void SendsAlot()
       {
          Server.Stub(new ApiExpectation { Method = "GET", Url = "/1/classes/ComplexParseObjectClass", Request = string.Concat("where=", Uri.EscapeDataString(@"{""PowerLevel"":{""$gt"":9000,""$lt"":10000},""Sayan"":false}"), "&count=1&skip=10&limit=20&order=-Id"), Response = _blankResponse });

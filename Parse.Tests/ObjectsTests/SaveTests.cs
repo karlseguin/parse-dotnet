@@ -44,5 +44,13 @@ namespace Parse.Tests.ObjectsTests
          new Driver().Objects.Save(new ByteEnumeratorClass { Nibbles = new List<byte> { 6, 58, 39, 255, 20, 0, 1, 2 } }, SetIfSuccess);
          WaitOne();
       }
+
+      [Test]
+      public void SendsASaveRequestWithAGeoPoint()
+      {
+         Server.Stub(new ApiExpectation { Method = "POST", Url = "/1/classes/GeoPointClass", Request = "{\"Location\":{\"__type\":\"GeoPoint\",\"latitude\":23.3,\"longitude\":-39.4}}", Response = "{}" });
+         new Driver().Objects.Save(new GeoPointClass {Location = new GeoPoint(23.3, -39.4)}, SetIfSuccess);
+         WaitOne();
+      }
    }
 }

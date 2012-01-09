@@ -14,7 +14,6 @@ namespace Parse.Queries
       IParseQuery<T> Sort(Expression<Func<T, object>> expression, bool ascending);
       IParseQuery<T> SortAscending(Expression<Func<T, object>> expression);
       IParseQuery<T> SortDescending(Expression<Func<T, object>> expression);
-
       void Execute(Action<Response<ResultsResponse<T>>> callback);
    }
 

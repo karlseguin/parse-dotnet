@@ -31,6 +31,10 @@ namespace Parse.Tests
       public IList<byte> Nibbles { get; set; }
    }
 
+   public class GeoPointClass
+   {
+      public GeoPoint Location { get; set; }
+   }
 
    public class SimpleClass
    {

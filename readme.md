@@ -203,3 +203,19 @@ Returns the user (or null) based on the username and password
 
 ### Querying, Updating and Deleting Users
 The `Users` api inherits all of the `Objects` functionality. The same methods you use to `Query`, `Delete` and `Update` (including `Increment`) should be used. Simply use `parse.Users.XYZ` instead of `parse.Objects.XYZ`
+
+
+## GeoPoints
+You can add a `Parse.GeoPoint` property to your objects (you can only have 1 such propery per object).
+
+You can find objects ordered by proximity to a location via the `NearSphere` query
+
+	parse.Objects.Query<User>().Where(c => c.Location.NearSphere(11.2, 20.5)).Execute(r => 
+	{
+		if (r.Success) 
+		{ 
+			var found = r.Data.Results;
+		}
+	});
+
+`NearSphere` takes a 3rd optional parameter which is the maxium distance, in miles, to search.

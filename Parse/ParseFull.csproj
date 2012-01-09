@@ -42,10 +42,12 @@
     <Compile Include="Components\Communicator.cs" />
     <Compile Include="Components\Json\ByteConverter.cs" />
     <Compile Include="Components\Json\DateConverter.cs" />
-    <Compile Include="Components\Json\ParseUserConverter.cs" />
+    <Compile Include="Components\Json\GeoPointConverter.cs" />
+    <Compile Include="Components\Json\ParseUserContract.cs" />
     <Compile Include="Components\ParseConfiguration.cs" />
     <Compile Include="Components\Response.cs" />
     <Compile Include="Driver.cs" />
+    <Compile Include="Models\GeoPoint.cs" />
     <Compile Include="Models\IParseUser.cs" />
     <Compile Include="Models\ParseObject.cs" />
     <Compile Include="Models\ResultsResponse.cs" />

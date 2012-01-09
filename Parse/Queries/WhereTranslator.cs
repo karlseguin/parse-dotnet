@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -9,10 +10,10 @@ namespace Parse.Queries
    internal class WhereTranslator : ExpressionVisitor
    {
       private const string _regexOperation = "$regex";
-      private IDictionary<string, object> _where;
       private string _currentKey;
       private string _currentOperation;
       private bool _inversed;
+      private IDictionary<string, object> _where;
 
       internal IDictionary<string, object> Translate(Expression expression)
       {
@@ -84,10 +85,7 @@ namespace Parse.Queries
          {
             if (m.Expression.NodeType == ExpressionType.Constant)
             {
-               var objectMember = Expression.Convert(m, typeof(object));
-               var getterLambda = Expression.Lambda<Func<object>>(objectMember);
-               var getter = getterLambda.Compile();
-               SetValue(getter());
+               SetValue(m.GetValue());
                return m;
             }
             if (m.Expression.NodeType == ExpressionType.Parameter)
@@ -95,7 +93,7 @@ namespace Parse.Queries
                _currentKey = m.Member.Name;
                if (!_where.ContainsKey(_currentKey))
                {
-                  if (m.Member is PropertyInfo && ((PropertyInfo)m.Member).PropertyType == typeof(bool))
+                  if (m.Member is PropertyInfo && ((PropertyInfo) m.Member).PropertyType == typeof (bool))
                   {
                      _where[_currentKey] = !_inversed;
                   }
@@ -103,7 +101,6 @@ namespace Parse.Queries
                   {
                      _where[_currentKey] = null;
                   }
-                  
                }
                return m;
             }
@@ -113,17 +110,17 @@ namespace Parse.Queries
 
       protected override Expression VisitMethodCall(MethodCallExpression m)
       {
-         if (m.Method.DeclaringType == typeof(Regex) && m.Method.Name == "IsMatch")
+         if (m.Method.DeclaringType == typeof (Regex) && m.Method.Name == "IsMatch")
          {
             HandleRegexIsMatch(m);
             return m;
          }
-         if (m.Method.DeclaringType == typeof(System.Linq.Enumerable) && m.Method.Name == "Contains")
+         if (m.Method.DeclaringType == typeof (Enumerable) && m.Method.Name == "Contains")
          {
             HandleContains(m);
             return m;
          }
-         if (m.Method.DeclaringType == typeof(string))
+         if (m.Method.DeclaringType == typeof (string))
          {
             switch (m.Method.Name)
             {
@@ -140,6 +137,11 @@ namespace Parse.Queries
                   return HandleRegexIsMatch(m, "{0}");
                }
             }
+         }
+         if (m.Method.DeclaringType == typeof (GeoPoint) && m.Method.Name == "NearSphere")
+         {
+            HandleNearSphere(m);
+            return m;
          }
          throw new NotSupportedException(string.Format("The method '{0}' is not supported", m.Method.Name));
       }
@@ -168,7 +170,7 @@ namespace Parse.Queries
          }
          else
          {
-            ((IDictionary<string, object>)_where[_currentKey])[_currentOperation] = o;
+            ((IDictionary<string, object>) _where[_currentKey])[_currentOperation] = o;
          }
       }
 
@@ -188,15 +190,38 @@ namespace Parse.Queries
          Visit(m.Arguments[1]);
       }
 
-      private Expression HandleRegexIsMatch(MethodCallExpression expression, string pattern)
+      private void HandleNearSphere(MethodCallExpression m)
       {
          ResetContext();
-         Visit(expression.Object);
+         var data = new Dictionary<string, object>
+                    {
+                       {
+                          "$nearSphere", new Dictionary<string, object>
+                                         {
+                                            {"__type", "GeoPoint"},
+                                            {"latitude", m.Arguments[0].GetValue()},
+                                            {"longitude", m.Arguments[1].GetValue()},
+                                         }
+                          }
+                    };
+
+         if (m.Arguments.Count == 3)
+         {
+            data["$maxDistanceInMiles"] = m.Arguments[2].GetValue();
+         }
+         _where[m.Object.GetMemberName()] = data;
+
+      }
+
+      private Expression HandleRegexIsMatch(MethodCallExpression m, string pattern)
+      {
+         ResetContext();
+         Visit(m.Object);
          SetNestedDictionary(_regexOperation);
-         Visit(expression.Arguments[0]);
+         Visit(m.Arguments[0]);
          var value = (IDictionary<string, object>) _where[_currentKey];
          value[_regexOperation] = string.Format(pattern, value[_regexOperation]);
-         return expression;
+         return m;
       }
    }
 }
