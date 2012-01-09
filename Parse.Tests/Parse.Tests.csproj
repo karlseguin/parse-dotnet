@@ -48,6 +48,7 @@
     <Compile Include="ObjectsTests\SaveTests.cs" />
     <Compile Include="ObjectsTests\UpdateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UsersTests\LoginTests.cs" />
     <Compile Include="UsersTests\RegisterTests.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -177,6 +177,7 @@ By importing `System.Linq` you can provide a list of values for an IN operation:
 ## Users
 Parse allows developers to register and authenticate users. In parse, all users must have a `username` and `password` field. Within this library this is enforced by the `IParseUser` interface. This means you'd likely have a `User` class which looks something like:
 
+	//could also implement IParseObject (in addition to IParseUser)
 	public class User : IParseUser
 	{
 		public string UserName{get;set;}
@@ -191,3 +192,11 @@ This method registers a user with parse. All communication with the parse api ha
 	parse.Users.Register(user)
 
 Registration takes an optional callback, which exposes a `ParseObject`, just like the `Objects.Save` method
+
+### Login
+Returns the user (or null) based on the username and password
+
+	parse.Users.Login("paul", "chani", r => 
+	{
+		if (r.Success) { var user = r.Data }
+	});
