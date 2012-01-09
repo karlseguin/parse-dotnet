@@ -197,15 +197,15 @@ namespace Parse
          };
       }
 
-      private static string UrlFor<T>()
+      private string UrlFor<T>()
       {
          return UrlFor(typeof (T));
       }
-      private static string UrlFor(object o)
+      private string UrlFor(object o)
       {
          return UrlFor(o.GetType());
       }
-      private static string UrlFor(Type t)
+      protected virtual string UrlFor(Type t)
       {
          return string.Concat("classes/", t.Name);
       }

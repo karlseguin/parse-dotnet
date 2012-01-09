@@ -200,3 +200,6 @@ Returns the user (or null) based on the username and password
 	{
 		if (r.Success) { var user = r.Data }
 	});
+
+### Querying, Updating and Deleting Users
+The `Users` api inherits all of the `Objects` functionality. The same methods you use to `Query`, `Delete` and `Update` (including `Increment`) should be used. Simply use `parse.Users.XYZ` instead of `parse.Objects.XYZ`

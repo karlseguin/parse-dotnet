@@ -4,14 +4,14 @@ using Newtonsoft.Json;
 
 namespace Parse
 {
-   public interface IUsers
+   public interface IUsers : IObjects
    {
       void Register(IParseUser user);
       void Register(IParseUser user, Action<Response<ParseObject>> callback);
       void Login<T>(string username, string password, Action<Response<T>> callback) where T : IParseUser;
    }
 
-   public class Users : IUsers
+   public class Users : Objects, IUsers
    {
       private const string _endPoint = "users";
       public static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
@@ -45,6 +45,11 @@ namespace Parse
             if (r.Success) { r.Data = JsonConvert.DeserializeObject<T>(r.Raw); }
             callback(r);
          });
+      }
+
+      protected override string UrlFor(Type t)
+      {
+         return _endPoint;
       }
    }
 }
