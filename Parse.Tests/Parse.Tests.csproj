@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseFixture.cs" />
+    <Compile Include="FilesTests\SaveTests.cs" />
     <Compile Include="ObjectsTests\IncrementTests.cs" />
     <Compile Include="ObjectsTests\QueryTests.cs" />
     <Compile Include="ParseObjectClass.cs" />

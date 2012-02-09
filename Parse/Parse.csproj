@@ -57,6 +57,8 @@
     <Compile Include="Components\Json\ParseUserContract.cs" />
     <Compile Include="Components\ParseConfiguration.cs" />
     <Compile Include="Components\Response.cs" />
+    <Compile Include="Files.cs" />
+    <Compile Include="Models\FileResponse.cs" />
     <Compile Include="Models\GeoPoint.cs" />
     <Compile Include="Models\IParseUser.cs" />
     <Compile Include="Models\ResultsResponse.cs" />

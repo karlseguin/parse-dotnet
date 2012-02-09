@@ -47,6 +47,8 @@
     <Compile Include="Components\ParseConfiguration.cs" />
     <Compile Include="Components\Response.cs" />
     <Compile Include="Driver.cs" />
+    <Compile Include="Files.cs" />
+    <Compile Include="Models\FileResponse.cs" />
     <Compile Include="Models\GeoPoint.cs" />
     <Compile Include="Models\IParseUser.cs" />
     <Compile Include="Models\ParseObject.cs" />

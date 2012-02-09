@@ -204,7 +204,6 @@ Returns the user (or null) based on the username and password
 ### Querying, Updating and Deleting Users
 The `Users` api inherits all of the `Objects` functionality. The same methods you use to `Query`, `Delete` and `Update` (including `Increment`) should be used. Simply use `parse.Users.XYZ` instead of `parse.Objects.XYZ`
 
-
 ## GeoPoints
 You can add a `Parse.GeoPoint` property to your objects (you can only have 1 such propery per object).
 
@@ -219,3 +218,32 @@ You can find objects ordered by proximity to a location via the `NearSphere` que
 	});
 
 `NearSphere` takes a 3rd optional parameter which is the maxium distance, in miles, to search.
+
+## Files
+Files can be uploaded and, optionally, associated with an object.
+
+### Creating A File
+You can either create a file from a text value:
+
+	parse.Files.Save("hollow.txt", "Our dried voices, when We whisper together Are quiet and meaningless As wind in dry grass", r => 
+	{
+		if (r.Success) 
+		{ 
+			var url = r.Data.Url;
+			var name = r.Data.Name;
+		}
+	});
+
+Or a binary file:
+
+	parse.Files.Save("sand.png", System.IO.File.ReadAllBytes("sand.png"), "image/png", r => 
+	{
+		if (r.Success) 
+		{ 
+			var url = r.Data.Url;
+			var name = r.Data.Name;
+		}
+	});
+
+Do note that Parse will give each uploaded a file its own unique name. So, if we were to upload a different "sand.png", it would create a separate file and would **not** overwrite the original.
+

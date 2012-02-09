@@ -37,11 +37,21 @@ namespace Parse
 
       public static void SendDataPayload<T>(string method, string endPoint, string payload, Action<Response<T>> callback)
       {
+         SendDataPayload(method, endPoint, payload, "application/json", callback);
+      }
+
+      public static void SendDataPayload<T>(string method, string endPoint, string payload, string contentType, Action<Response<T>> callback)
+      {
+         SendDataPayload(method, endPoint, Encoding.UTF8.GetBytes(payload), contentType, callback);
+      }
+
+      public static void SendDataPayload<T>(string method, string endPoint, byte[] payload, string contentType, Action<Response<T>> callback)
+      {
          var request = BuildRequest(method, endPoint, null, callback);
          if (request != null)
          {
-            request.ContentType = "application/json";
-            request.BeginGetRequestStream(GetRequestStream<T>, new RequestState<T> { Request = request, Payload = Encoding.UTF8.GetBytes(payload), Callback = callback });
+            request.ContentType = contentType;
+            request.BeginGetRequestStream(GetRequestStream<T>, new RequestState<T> { Request = request, Payload = payload, Callback = callback });
          }
       }
 
