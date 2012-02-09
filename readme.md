@@ -251,3 +251,7 @@ Or a binary file:
 
 Do note that Parse will give each uploaded a file its own unique name. So, if we were to upload a different "sand.png", it would create a separate file and would **not** overwrite the original.
 
+### Deleting A File
+To delete a file you must supply the Parse name of the file (when you saved a file, Parse returned a unique name based on the name you supplied). Also, the Parse driver must have been configured with a MasterKey.
+
+	parse.Files.Delete("12323-sand.png", null);

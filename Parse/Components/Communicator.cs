@@ -18,7 +18,12 @@ namespace Parse
 
       public static void SendQueryPayload<T>(string method, string endPoint, Action<Response<T>> callback)
       {
-         SendQueryPayload(method, endPoint, (string)null, callback);
+         SendQueryPayload(method, endPoint, null, false, callback);
+      }
+
+      public static void SendQueryPayload<T>(string method, string endPoint, bool includeMasterKey, Action<Response<T>> callback)
+      {
+         SendQueryPayload(method, endPoint, null, includeMasterKey, callback);
       }
 
       public static void SendQueryPayload<T>(string method, string endPoint, IDictionary<string, object> payload, Action<Response<T>> callback)
@@ -28,9 +33,18 @@ namespace Parse
 
       public static void SendQueryPayload<T>(string method, string endPoint, string query, Action<Response<T>> callback)
       {
+         SendQueryPayload(method, endPoint, query, false, callback);
+      }
+
+      public static void SendQueryPayload<T>(string method, string endPoint, string query, bool includeMasterKey, Action<Response<T>> callback)
+      {
          var request = BuildRequest(method, endPoint, query, callback);
          if (request != null)
          {
+            if (includeMasterKey)
+            {
+               request.Headers["X-Parse-Master-Key"] = ParseConfiguration.Configuration.MasterKey;
+            }
             request.BeginGetResponse(GetResponseStream<T>, new RequestState<T> { Request = request, Callback = callback });
          }
       }

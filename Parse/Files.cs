@@ -8,6 +8,7 @@ namespace Parse
    {
       void Save(string name, string data, Action<Response<FileResponse>> callback);
       void Save(string name, byte[] data, string contentType, Action<Response<FileResponse>> callback);
+      void Delete(string name, Action<Response> callback);
    }
 
    public class Files : IFiles
@@ -24,6 +25,14 @@ namespace Parse
             if (callback == null) return;
             if (r.Success) { r.Data = JsonConvert.DeserializeObject<FileResponse>(r.Raw); }
             callback(r);
+         });
+      }
+
+      public void Delete(string name, Action<Response> callback)
+      {
+         Communicator.SendQueryPayload<FileResponse>(Communicator.Delete, UrlFor(name), true, r =>
+         {
+            if (callback != null) { callback(r); }
          });
       }
 
