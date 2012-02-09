@@ -71,7 +71,8 @@ namespace Parse
          var request = (HttpWebRequest)WebRequest.Create(url);
          request.Method = method;
          request.UserAgent = "parse-dotnet";
-         request.Credentials = new NetworkCredential(configuration.ApplicationId, configuration.ClientSecret);
+         request.Headers["X-Parse-Application-Id"] = configuration.ApplicationId;
+         request.Headers["X-Parse-REST-API-Key"] = configuration.RestApiKey;
          return request;
       }
 

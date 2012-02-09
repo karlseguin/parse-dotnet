@@ -16,7 +16,8 @@ namespace Parse
       public string Url { get; private set; }
       public Func<bool> NetworkCheck { get; private set; }
       public string ApplicationId { get; private set; }
-      public string ClientSecret { get; private set; }
+      public string RestApiKey { get; private set; }
+      public string MasterKey { get; private set; }
       public static ParseConfiguration Configuration
       {
          get { return _configuration; }
@@ -38,16 +39,27 @@ namespace Parse
          return this;
       }
 
-      public static void Configure(string applicationId, string clientSecret)
+      public static void Configure(string applicationId, string restApiKey)
       {
-         Configure(applicationId, clientSecret, null);
+         Configure(applicationId, restApiKey, null, null);
       }
 
-      public static void Configure(string applicationId, string clientSecret, Action<IParseConfiguration> action)
+      public static void Configure(string applicationId, string restApiKey, string masterKey)
+      {
+         Configure(applicationId, restApiKey, masterKey, null);
+      }
+
+      public static void Configure(string applicationId, string restApiKey, Action<IParseConfiguration> action)
+      {
+         Configure(applicationId, restApiKey, null, action);
+      }
+
+      public static void Configure(string applicationId, string restApiKey, string masterKey, Action<IParseConfiguration> action)
       {
          _configuration.NetworkAvailableCheck(NetworkInterface.GetIsNetworkAvailable);
          _configuration.ApplicationId = applicationId;
-         _configuration.ClientSecret = clientSecret;
+         _configuration.RestApiKey = restApiKey;
+         _configuration.MasterKey = masterKey;
          _configuration.Url = "https://api.parse.com/";
          if (action != null)
          {

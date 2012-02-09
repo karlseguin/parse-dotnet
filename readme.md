@@ -8,15 +8,19 @@ This library is in very early development.
 The library is availble on nuget, at <http://nuget.org/packages/parse>
 
 ## Configuration
-On application start you should configure the driver by supplying your application id and master key (authorization with the REST API is done via the master key and not the client key):
+On application start you should configure the driver by supplying your application id and the rest api key:
 
-	ParseConfiguration.Configure(APPLICATION_ID, MASTER_KEY);
+	ParseConfiguration.Configure(APPLICATION_ID, REST_API_KEY);
 
 Once configured, you can create an instance of the parse driver:
 
 	var parse = new Driver();
 
 This instance is both thread-safe and inexpensive to create..you can either keep a single one around or create them as needed.
+
+Some commands, namely those which delete objects/users/file require your master key. If you plan on using these methods, you should use the `Configure` overload:
+
+	ParseConfiguration.Configure(APPLICATION_ID, REST_API_KEY, MASTER_KEY);
 
 ## Objects
 Parse allows developers to easily persist data from a mobile device into the cloud. The data can be retrieved at a later time. 
