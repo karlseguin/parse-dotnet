@@ -36,6 +36,11 @@ namespace Parse.Tests
       public GeoPoint Location { get; set; }
    }
 
+   public class FileClass
+   {
+      public ParseFile File { get; set; }
+   }
+
    public class SimpleClass
    {
       public int PowerLevel { get; set; }

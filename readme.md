@@ -255,3 +255,9 @@ Do note that Parse will give each uploaded a file its own unique name. So, if we
 To delete a file you must supply the Parse name of the file (when you saved a file, Parse returned a unique name based on the name you supplied). Also, the Parse driver must have been configured with a MasterKey.
 
 	parse.Files.Delete("12323-sand.png", null);
+
+### Associating Files with Objects
+Once you've created a file, you can associate it with an object by wrapping the file name in a `ParseFile` object. Note that this must be the parse-supplied file name:
+
+	var user = new User{Name = "Goku", PowerLevel = 9001, Profile = new ParseFile("1233233-goku.png")};
+	parse.Objects.Save(user);

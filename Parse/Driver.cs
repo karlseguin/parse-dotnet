@@ -11,7 +11,7 @@ namespace Parse
 
    public class Driver : IDriver
    {
-      internal static readonly JsonConverter[] SerializationConverters = new[] { (JsonConverter)new DateConverter(), new ByteConverterr(), new GeoPointConverter() };
+      internal static readonly JsonConverter[] SerializationConverters = new[] { (JsonConverter)new DateConverter(), new ByteConverterr(), new GeoPointConverter(), new ParseFileConverter() };
 
       private readonly IObjects _objects;
       private readonly IUsers _users;

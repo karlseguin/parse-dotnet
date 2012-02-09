@@ -52,5 +52,13 @@ namespace Parse.Tests.ObjectsTests
          new Driver().Objects.Save(new GeoPointClass {Location = new GeoPoint(23.3, -39.4)}, SetIfSuccess);
          WaitOne();
       }
+
+      [Test]
+      public void SendsASaveRequestWithAFile()
+      {
+         Server.Stub(new ApiExpectation { Method = "POST", Url = "/1/classes/FileClass", Request = "{\"File\":{\"__type\":\"File\",\"name\":\"test.gif\"}}", Response = "{}" });
+         new Driver().Objects.Save(new FileClass { File = new ParseFile("test.gif") }, SetIfSuccess);
+         WaitOne();
+      }
    }
 }

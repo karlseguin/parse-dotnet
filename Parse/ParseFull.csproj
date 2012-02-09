@@ -43,6 +43,7 @@
     <Compile Include="Components\Json\ByteConverter.cs" />
     <Compile Include="Components\Json\DateConverter.cs" />
     <Compile Include="Components\Json\GeoPointConverter.cs" />
+    <Compile Include="Components\Json\ParseFileConverter.cs" />
     <Compile Include="Components\Json\ParseUserContract.cs" />
     <Compile Include="Components\ParseConfiguration.cs" />
     <Compile Include="Components\Response.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Models\FileResponse.cs" />
     <Compile Include="Models\GeoPoint.cs" />
     <Compile Include="Models\IParseUser.cs" />
+    <Compile Include="Models\ParseFile.cs" />
     <Compile Include="Models\ParseObject.cs" />
     <Compile Include="Models\ResultsResponse.cs" />
     <Compile Include="Objects.cs" />
