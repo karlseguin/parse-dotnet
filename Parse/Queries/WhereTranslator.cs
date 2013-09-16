@@ -91,6 +91,14 @@ namespace Parse.Queries
             if (m.Expression.NodeType == ExpressionType.Parameter)
             {
                _currentKey = m.Member.Name;
+
+               // Use JsonProperty if it exists..
+               var jsonName = (Newtonsoft.Json.JsonPropertyAttribute)m.Member.GetCustomAttributes(false).FirstOrDefault(x => x is Newtonsoft.Json.JsonPropertyAttribute);
+               if (jsonName != null)
+               {
+                   _currentKey = jsonName.PropertyName;
+               }
+
                if (!_where.ContainsKey(_currentKey))
                {
                   if (m.Member is PropertyInfo && ((PropertyInfo) m.Member).PropertyType == typeof (bool))

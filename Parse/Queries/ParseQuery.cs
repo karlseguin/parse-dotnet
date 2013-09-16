@@ -81,7 +81,7 @@ namespace Parse.Queries
       public void Execute(Action<Response<ResultsResponse<T>>> callback)
       {
          var dictionary = new Dictionary<string, object>();
-         if (_where != null) { dictionary["where"] = JsonConvert.SerializeObject(_where); }
+         if (_where != null) { dictionary["where"] = JsonConvert.SerializeObject(_where, Driver.SerializationConverters); }
          if (_count) { dictionary["count"] = '1'; }
          if (_skip.HasValue) { dictionary["skip"] = _skip.Value; }
          if (_limit.HasValue) { dictionary["limit"] = _limit.Value; }
